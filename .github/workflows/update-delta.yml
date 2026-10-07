@@ -5,8 +5,6 @@ on:
 
   schedule:
     # Check for a new Delta version every 6 hours.
-    # Using :23 instead of :00 helps avoid GitHub's
-    # busiest scheduled workflow period.
     - cron: "23 */6 * * *"
 
 permissions:
@@ -24,15 +22,14 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.13"
-          cache: "pip"
 
       - name: Install dependencies
         run: |
@@ -109,16 +106,10 @@ jobs:
           VERSION="$(python - <<'PY'
           import json
 
-          with open(
-              "delta.json",
-              "r",
-              encoding="utf-8",
-          ) as f:
+          with open("delta.json", "r", encoding="utf-8") as f:
               source = json.load(f)
 
-          print(
-              source["apps"][0]["versions"][0]["version"]
-          )
+          print(source["apps"][0]["versions"][0]["version"])
           PY
           )"
 
