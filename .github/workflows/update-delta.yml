@@ -1,0 +1,126 @@
+name: Update Shrubbery's Delta Source
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    # Check for a new Delta version every 6 hours.
+    # Using :23 instead of :00 helps avoid GitHub's
+    # busiest scheduled workflow period.
+    - cron: "23 */6 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: shrubbery-delta-source-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Update delta.json
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install requests
+
+      - name: Generate Shrubbery's Delta source
+        run: |
+          python update_delta.py
+
+      - name: Validate delta.json
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("delta.json", "r", encoding="utf-8") as f:
+              data = json.load(f)
+
+          if not isinstance(data, dict):
+              raise SystemExit("delta.json root is not an object")
+
+          if data.get("name") != "Shrubbery's Delta Source":
+              raise SystemExit("Unexpected source name")
+
+          apps = data.get("apps")
+
+          if not isinstance(apps, list) or not apps:
+              raise SystemExit("delta.json contains no apps")
+
+          app = apps[0]
+
+          if app.get("bundleIdentifier") != "com.gloop.deltamobile":
+              raise SystemExit("Unexpected Delta bundle identifier")
+
+          versions = app.get("versions")
+
+          if not isinstance(versions, list) or not versions:
+              raise SystemExit("Delta contains no versions")
+
+          newest = versions[0]
+
+          if not newest.get("version"):
+              raise SystemExit("Newest version has no version number")
+
+          if not newest.get("downloadURL"):
+              raise SystemExit("Newest version has no download URL")
+
+          print("delta.json validated successfully.")
+          print("Latest Delta version:", newest["version"])
+          print("Download URL:", newest["downloadURL"])
+          PY
+
+      - name: Check for changes
+        id: changes
+        shell: bash
+        run: |
+          if git diff --quiet -- delta.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "delta.json is already current."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "delta.json changed."
+          fi
+
+      - name: Commit updated delta.json
+        if: steps.changes.outputs.changed == 'true'
+        shell: bash
+        run: |
+          git config user.name "Shrubbery Delta Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add delta.json
+
+          VERSION="$(python - <<'PY'
+          import json
+
+          with open(
+              "delta.json",
+              "r",
+              encoding="utf-8",
+          ) as f:
+              source = json.load(f)
+
+          print(
+              source["apps"][0]["versions"][0]["version"]
+          )
+          PY
+          )"
+
+          git commit -m "Update Delta to ${VERSION} - Shrubbery"
+          git push
