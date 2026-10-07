@@ -1,0 +1,40 @@
+{
+  "name": "Shrubbery's Delta Source",
+  "subtitle": "Created and maintained by Shrubbery",
+  "description": "An unofficial auto-updating AltStore, SideStore and Feather source for Delta Executor on iOS. This source was created and is maintained by Shrubbery / ShrubHub. Delta itself is developed separately by the Delta team. App files are downloaded from Delta's own distribution servers.",
+  "website": "https://deltaexploits.gg/",
+  "iconURL": "https://cdn.weao.gg/slug/delta/logo.png",
+  "tintColor": "#335FFF",
+  "featuredApps": [
+    "com.gloop.deltamobile"
+  ],
+  "apps": [
+    {
+      "name": "Delta",
+      "bundleIdentifier": "com.gloop.deltamobile",
+      "developerName": "Delta Exploits",
+      "subtitle": "Delta Executor for iOS",
+      "localizedDescription": "Delta Executor for iOS. This unofficial AltStore-style source was created and is maintained by Shrubbery / ShrubHub and automatically tracks new Delta iOS releases from Delta's distribution pages.",
+      "iconURL": "https://cdn.weao.gg/slug/delta/logo.png",
+      "tintColor": "#335FFF",
+      "category": "games",
+      "screenshots": {
+        "iphone": [
+          "https://cdn.weao.gg/slug/delta/screenshot1.png",
+          "https://cdn.weao.gg/slug/delta/screenshot2.png",
+          "https://cdn.weao.gg/slug/delta/screenshot3.png",
+          "https://cdn.weao.gg/slug/delta/screenshot4.png"
+        ]
+      },
+      "versions": [
+        {
+          "version": "2.741.1062",
+          "date": "2026-10-07T20:57:18Z",
+          "localizedDescription": "Updated to Delta 2.741.1062. Source maintained by Shrubbery / ShrubHub.",
+          "downloadURL": "https://cdn.glopdelivery.com/file/Delta-2.741.1062.ipa",
+          "size": 144496835
+        }
+      ]
+    }
+  ]
+}
