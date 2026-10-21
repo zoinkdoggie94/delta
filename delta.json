@@ -28,6 +28,13 @@
       },
       "versions": [
         {
+          "version": "2.743.1136",
+          "date": "2026-10-21T11:57:42Z",
+          "localizedDescription": "Updated to Delta 2.743.1136. Source maintained by Shrubbery / ShrubHub.",
+          "downloadURL": "https://cdn.glopdelivery.com/file/Delta-2.743.1136.ipa",
+          "size": 149438924
+        },
+        {
           "version": "2.741.1062",
           "date": "2026-10-07T20:57:18Z",
           "localizedDescription": "Updated to Delta 2.741.1062. Source maintained by Shrubbery / ShrubHub.",
